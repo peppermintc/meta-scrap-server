@@ -3,16 +3,20 @@ import { ALLOW_KEY_LIST } from "../../constants";
 import { fetchMetaData } from "../../utils";
 
 const getMetaHandler = async (req: Request, res: Response) => {
-  const url = String(req.query.url);
-  const key = String(req.query.key);
+  const url = req.query.url?.toString();
+  const key = req.query.key?.toString();
 
   try {
-    if (!url) {
-      throw new Error("URL parameter is required.");
+    if (!key) {
+      throw new Error("key query string required");
     }
 
     if (!ALLOW_KEY_LIST.includes(key)) {
-      throw new Error("Invalid key provided.");
+      throw new Error("key not allowed");
+    }
+
+    if (!url) {
+      throw new Error("URL query string required");
     }
 
     const meta = await fetchMetaData(url);
